@@ -172,7 +172,7 @@ def main(args):
 				#debug
 				# images_attack_rgb = tf.multiply(images_attack_rgb,255.0)
 				# if step == 44:
-				if flag8 == 0 and np.min(predictions[:,target_index]) < 0.012:
+				if flag8 == 0 and np.min(predictions[:,target_index]) < 0.016:
 					mdir = os.path.join(pdir, "adv-un")
 					mdir_exist = os.path.exists(mdir)
 					if not mdir_exist:
