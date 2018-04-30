@@ -63,12 +63,12 @@ def main(args):
                 emb = sess.run(embeddings, feed_dict=feed_dict)
                
 
-                embedding_file_name = './embedding_target'
+                embedding_file_name = './embedding_untarget_dodging'
                 embedding_file_name = os.path.expanduser(embedding_file_name)
                 # Saving classifier model
                 with open(embedding_file_name, 'wb') as outfile:
                     pickle.dump(emb, outfile)
-                    print("*******dump embedding_target success***********")
+                    print("*******dump embedding_untarget_dodging success***********")
 
 
                 classifier_filename_exp = os.path.expanduser(args.classifier_filename)
