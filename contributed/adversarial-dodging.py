@@ -130,7 +130,7 @@ def main(args):
 			isExists=os.path.exists(pdir)
 			if not isExists:
 				os.makedirs(pdir)
-			target_index = 8
+			target_index = 5
 			while True:    
 				
 				feed_dict = {phase_train_placeholder: False}
@@ -161,8 +161,8 @@ def main(args):
 				#debug
 				# images_attack_rgb = tf.multiply(images_attack_rgb,255.0)
 				# if step == 4:
-				if flag8 == 0 and np.min(predictions[:,target_index]) < 0.054:
-					mdir = os.path.join(pdir, "adv-un-wen")
+				if flag8 == 0 and np.min(predictions[:,target_index]) < 0.028:
+					mdir = os.path.join(pdir, "adv-un-lin")
 					mdir_exist = os.path.exists(mdir)
 					if not mdir_exist:
 						os.makedirs(mdir)
