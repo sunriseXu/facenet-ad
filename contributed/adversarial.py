@@ -78,12 +78,12 @@ def main(args):
 			
 			pre_input_i = tf.clip_by_value(pre_input_i_tmp,0.,255.)
 
-			# pre_input_whitened = prewhiten(pre_input_i)
+			
 			pre_input_whitened = tf.map_fn(lambda frame: tf.image.per_image_standardization(frame), pre_input_i)
 			
-			# print(ge.sgv(pre_input_whitened.op))
+		
 			
-			# images_placeholder = pre_input_whitened
+			
 			ge.swap_inputs(images_placeholder.op, [pre_input_whitened])
 
 			embeddings_target_tensor = tf.convert_to_tensor(embeddings_target)
@@ -92,29 +92,14 @@ def main(args):
 			global_step = tf.Variable(0, trainable=False)
 			learning_rate_placeholder = tf.placeholder(tf.float32, name='learning_rate')
 
-			# learning_rate = tf.train.exponential_decay(learning_rate_placeholder, global_step,
-			# 	100, args.learning_rate_decay_factor, staircase=True)
-			# lr = args.learning_rate
-			# embedding_target = sess.run()
-			#calculate loss, grad, and apply them
-			# sub_res = tf.subtract(embeddings, embedding_target)
-			# loss = tf.norm(sub_res)
-			loss = tf.sqrt(tf.reduce_sum(tf.square(tf.subtract(embeddings, embeddings_target_tensor)), 1))
-			# TV_loss = tf.reduce_sum(tf.image.total_variation(pre_r_masking))
-			# dodging
-			# loss = tf.negative(loss0)
-			# loss = loss + TV_loss
 			
-			# loss = tf.div(1.0, loss0)
+			loss = tf.sqrt(tf.reduce_sum(tf.square(tf.subtract(embeddings, embeddings_target_tensor)), 1))
+			
 			grads = tf.gradients(loss, pre_r)
 			grads = tf.squeeze(grads)
 
 			
-			# with tf.control_dependencies([loss]): #loss_averages_op run first, and go on 
-			# 	opt = tf.train.AdagradOptimizer(learning_rate) # AdagradOptimizer is a class
-			# 	grads = opt.compute_gradients(loss, pre_r)
-			
-			# apply_gradient_op = opt.apply_gradients(grads, global_step=global_step)
+		
 			
 			grad_absmax = tf.reduce_max(tf.abs(grads))
 			grad_absmax = tf.maximum(1e-10,grad_absmax)
@@ -171,7 +156,7 @@ def main(args):
 						k+=1
 				#debug
 				# images_attack_rgb = tf.multiply(images_attack_rgb,255.0)
-				# if step == 44:
+				# if step == 4:
 				if flag8 == 0 and np.min(predictions[:,target_index]) > 0.94:
 					mdir = os.path.join(pdir, "adv-final")
 					mdir_exist = os.path.exists(mdir)
@@ -185,7 +170,9 @@ def main(args):
 					eye_glass1 = tf.cast(np.add(eye_glass,np.multiply(reverse_masking,255)),tf.uint8)
 					output_eye_glass = tf.image.resize_images(eye_glass1,size)
 					output_eye_glass = tf.cast(output_eye_glass,tf.uint8)
-					with open("eye_glass.jpg",'wb') as f:
+					glass_tmp = "eye_glass.jpg"
+					glass_dir = os.path.join(mdir,glass_tmp)
+					with open(glass_dir,'wb') as f:
 						f.write(sess.run(tf.image.encode_jpeg(output_eye_glass)))
 					print("print eyeglass success")
 					
@@ -202,6 +189,7 @@ def main(args):
 							flag8 = 1
 						with open(jpg_file_re, 'wb') as f1:
 							f1.write(sess.run(tf.image.encode_jpeg(output_image_resized[i])))
+
 					# break
 					
 
